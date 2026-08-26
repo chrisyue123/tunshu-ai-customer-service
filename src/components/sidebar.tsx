@@ -12,6 +12,7 @@ import {
   ArrowRightLeft,
   History,
   Warehouse,
+  Plug,
 } from 'lucide-react';
 
 const navigation = [
@@ -22,6 +23,7 @@ const navigation = [
   { name: '对话监控', href: '/monitor', icon: Monitor },
   { name: '转人工设置', href: '/transfer', icon: ArrowRightLeft },
   { name: '历史记录', href: '/history', icon: History },
+  { name: '企业微信对接', href: '/wecom', icon: Plug },
 ];
 
 export function Sidebar() {
