@@ -7,12 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Lock, Mail } from "lucide-react";
+import { Lock, Mail, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -85,13 +86,21 @@ export default function LoginPage() {
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="请输入密码"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 pr-10"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
             </div>
 
