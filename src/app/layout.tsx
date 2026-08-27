@@ -14,19 +14,10 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body className="min-h-screen bg-gray-50 font-sans antialiased">
-        <div className="flex h-screen overflow-hidden">
-          <Sidebar />
-          <div className="flex flex-1 flex-col overflow-hidden">
-            <Header />
-            <main className="flex-1 overflow-y-auto p-6">
-              {children}
-            </main>
-          </div>
-        </div>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
 }
 
-import { Sidebar } from '@/components/sidebar';
-import { Header } from '@/components/header';
+import { ClientLayout } from '@/components/client-layout';

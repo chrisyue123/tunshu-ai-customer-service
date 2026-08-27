@@ -1,8 +1,25 @@
 'use client';
 
 import { Bell, Settings } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export function Header() {
+  const [userName, setUserName] = useState('管理员');
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user.name) {
+          setUserName(user.name);
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, []);
+
   return (
     <header className="flex h-16 items-center justify-between border-b bg-white px-6">
       <div>
@@ -19,9 +36,9 @@ export function Header() {
         <div className="h-8 w-px bg-gray-200" />
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center">
-            <span className="text-sm font-medium text-orange-600">管</span>
+            <span className="text-sm font-medium text-orange-600">{userName[0]}</span>
           </div>
-          <span className="text-sm font-medium text-gray-700">管理员</span>
+          <span className="text-sm font-medium text-gray-700">{userName}</span>
         </div>
       </div>
     </header>

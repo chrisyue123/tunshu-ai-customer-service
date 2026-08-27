@@ -107,3 +107,22 @@ export const notificationTargets = pgTable(
     index("notification_targets_is_active_idx").on(table.is_active),
   ]
 );
+
+// 用户表（员工登录）
+export const users = pgTable(
+  "users",
+  {
+    id: varchar("id", { length: 36 }).primaryKey().default(sql`gen_random_uuid()`),
+    email: varchar("email", { length: 255 }).notNull().unique(),
+    password: varchar("password", { length: 255 }).notNull(),
+    name: varchar("name", { length: 100 }).notNull(),
+    role: varchar("role", { length: 20 }).notNull().default("employee"),
+    is_active: boolean("is_active").notNull().default(true),
+    created_at: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("users_email_idx").on(table.email),
+    index("users_role_idx").on(table.role),
+  ]
+);

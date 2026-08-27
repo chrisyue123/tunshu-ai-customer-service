@@ -13,6 +13,8 @@ import {
   History,
   Warehouse,
   Plug,
+  Users,
+  LogOut,
 } from 'lucide-react';
 
 const navigation = [
@@ -23,6 +25,7 @@ const navigation = [
   { name: '对话监控', href: '/monitor', icon: Monitor },
   { name: '转人工设置', href: '/transfer', icon: ArrowRightLeft },
   { name: '历史记录', href: '/history', icon: History },
+  { name: '员工管理', href: '/employees', icon: Users },
   { name: '企业微信对接', href: '/wecom', icon: Plug },
 ];
 
@@ -55,11 +58,22 @@ export function Sidebar() {
           );
         })}
       </nav>
-      <div className="border-t border-gray-800 px-4 py-3">
+      <div className="border-t border-gray-800 px-4 py-3 space-y-2">
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 rounded-full bg-green-400" />
           <span className="text-xs text-gray-500">系统运行中</span>
         </div>
+        <button
+          onClick={() => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+          }}
+          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-xs text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors"
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          退出登录
+        </button>
       </div>
     </div>
   );
