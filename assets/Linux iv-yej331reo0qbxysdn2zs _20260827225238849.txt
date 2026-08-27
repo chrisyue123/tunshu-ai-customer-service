@@ -1,0 +1,81 @@
+Linux iv-yej331reo0qbxysdn2zs 5.4.250-9-velinux1u2-amd64 #velinux1u2 SMP Debian 5.4.250-9-velinux1u2 Mon Apr 28 08:10:41  x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Thu Aug 27 22:48:28 2026 from 100.65.34.4
+root@iv-yej331reo0qbxysdn2zs:~# # 1. 查看 Nginx 配置
+root@iv-yej331reo0qbxysdn2zs:~# sudo nginx -T | grep -A 20 "ssl"
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+        ssl_prefer_server_ciphers on;
+
+        ##
+        # Logging Settings
+        ##
+
+        access_log /var/log/nginx/access.log;
+        error_log /var/log/nginx/error.log;
+
+        ##
+        # Gzip Settings
+        ##
+
+        gzip on;
+
+        # gzip_vary on;
+        # gzip_proxied any;
+        # gzip_comp_level 6;
+        # gzip_buffers 16 8k;
+        # gzip_http_version 1.1;
+        # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 2. 检查 SSL 证书文件是否存在
+root@iv-yej331reo0qbxysdn2zs:~# ls -la /etc/nginx/ssl/
+total 20
+drwxr-xr-x 2 root root 4096 Jul 14 01:21 .
+drwxr-xr-x 9 root root 4096 Jul 14 01:08 ..
+-rw-r--r-- 1 root root 5140 Jul 14 01:16 cert.pem
+-rw-r--r-- 1 root root 1679 Jul 14 01:21 key.pem
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 3. 查看 Nginx 错误日志
+root@iv-yej331reo0qbxysdn2zs:~# sudo tail -30 /var/log/nginx/error.log
+2026/08/27 21:50:06 [error] 2305413#2305413: *1112 no live upstreams while connecting to upstream, client: 172.105.106.145, server: _, request: "GET /_next/static/chunks/src_app_page_tsx_11064461._.js HTTP/1.1", upstream: "http://localhost/_next/static/chunks/src_app_page_tsx_11064461._.js", host: "14.103.65.76", referrer: "http://14.103.65.76/"
+2026/08/27 21:50:06 [error] 2305413#2305413: *1114 no live upstreams while connecting to upstream, client: 172.105.106.145, server: _, request: "GET /_next/static/chunks/_b68c76eb._.js HTTP/1.1", upstream: "http://localhost/_next/static/chunks/_b68c76eb._.js", host: "14.103.65.76", referrer: "http://14.103.65.76/"
+2026/08/27 21:50:07 [error] 2305413#2305413: *1106 no live upstreams while connecting to upstream, client: 172.105.106.145, server: _, request: "GET /_next/static/chunks/7e643_next_dist_client_components_builtin_global-error_ca0067db.js HTTP/1.1", upstream: "http://localhost/_next/static/chunks/7e643_next_dist_client_components_builtin_global-error_ca0067db.js", host: "14.103.65.76", referrer: "http://14.103.65.76/"
+2026/08/27 21:50:09 [error] 2305413#2305413: *1106 no live upstreams while connecting to upstream, client: 172.105.106.145, server: _, request: "GET /favicon.ico?favicon.0b3bf435.ico HTTP/1.1", upstream: "http://localhost/favicon.ico?favicon.0b3bf435.ico", host: "14.103.65.76", referrer: "http://14.103.65.76/"
+2026/08/27 21:50:15 [error] 2305413#2305413: *1126 no live upstreams while connecting to upstream, client: 172.105.106.145, server: _, request: "GET /_next/webpack-hmr?id=c_358EikzZqTwjk0dBgyU HTTP/1.1", upstream: "http://localhost/_next/webpack-hmr?id=c_358EikzZqTwjk0dBgyU", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:12 [error] 2305413#2305413: *1163 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:13 [error] 2305413#2305413: *1166 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:15 [error] 2305413#2305413: *1168 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:17 [error] 2305413#2305413: *1170 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:19 [error] 2305413#2305413: *1172 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:21 [error] 2305413#2305413: *1174 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:27 [error] 2305413#2305413: *1176 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:34 [error] 2305413#2305413: *1178 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:40 [error] 2305413#2305413: *1181 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:45 [error] 2305413#2305413: *1185 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:50 [error] 2305413#2305413: *1189 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:50:55 [error] 2305413#2305413: *1211 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:00 [error] 2305413#2305413: *1263 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9 HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=lohkT36Ub4evoDKV8WnD9", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:16 [error] 2305413#2305413: *1368 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:19 [error] 2305413#2305413: *1459 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:21 [error] 2305413#2305413: *1561 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:22 [error] 2305413#2305413: *1657 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:24 [error] 2305413#2305413: *1695 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:25 [error] 2305413#2305413: *1697 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:31 [error] 2305413#2305413: *1699 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:37 [error] 2305413#2305413: *1702 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:45 [error] 2305413#2305413: *1712 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:51:54 [error] 2305413#2305413: *1714 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:52:04 [error] 2305413#2305413: *1716 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://127.0.0.1:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+2026/08/27 22:52:13 [error] 2305413#2305413: *1718 upstream sent no valid HTTP/1.0 header while reading response header from upstream, client: 139.227.1.59, server: _, request: "GET /_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF- HTTP/1.1", upstream: "http://[::1]:5000/_next/webpack-hmr?id=4WvW_uCF9yUH6ciBBswF-", host: "tunshu-ministorage.cn"
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 4. 检查 certbot 证书
+root@iv-yej331reo0qbxysdn2zs:~# sudo certbot certificates
+sudo: certbot: command not found
+root@iv-yej331reo0qbxysdn2zs:~# 
