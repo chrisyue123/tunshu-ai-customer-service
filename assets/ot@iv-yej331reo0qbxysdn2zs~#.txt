@@ -1,0 +1,255 @@
+ot@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 2. 查看 pm2 日志
+root@iv-yej331reo0qbxysdn2zs:~# pm2 logs tunshu-ai --lines 50
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 3. 检查 Nginx 状态
+root@iv-yej331reo0qbxysdn2zs:~# sudo systemctl status nginx
+● nginx.service - A high performance web server and a reverse proxy server
+   Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+   Active: active (running) since Wed 2026-08-26 21:55:56 CST; 22h ago
+     Docs: man:nginx(8)
+  Process: 2266940 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+  Process: 2266941 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+ Main PID: 2266942 (nginx)
+    Tasks: 3 (limit: 2184)
+   Memory: 3.4M
+   CGroup: /system.slice/nginx.service
+           ├─2266942 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+           ├─2266943 nginx: worker process
+           └─2266944 nginx: worker process
+
+Warning: Journal has been rotated since unit was started. Log output is incomplete or unavailable.
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 4. 检查 3000 端口是否在监听
+root@iv-yej331reo0qbxysdn2zs:~# sudo ss -tlnp | grep :3000
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 5. 检查 80 端口是否在监听
+root@iv-yej331reo0qbxysdn2zs:~# sudo ss -tlnp | grep :80
+LISTEN    0         511                0.0.0.0:80               0.0.0.0:*        users:(("nginx",pid=2266944,fd=6),("nginx",pid=2266943,fd=6),("nginx",pid=2266942,fd=6))
+root@iv-yej331reo0qbxysdn2zs:~# # 1. 安装 Node.js 24（如果还没有）
+root@iv-yej331reo0qbxysdn2zs:~# curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+
+2026-08-27 20:47:07 - Installing pre-requisites
+Get:1 http://mirrors.ivolces.com/velinux orion InRelease [19.4 kB]
+Hit:2 http://mirrors.ivolces.com/debian buster InRelease
+Hit:3 http://mirrors.ivolces.com/debian buster-backports InRelease
+Hit:4 http://mirrors.ivolces.com/debian-security buster/updates InRelease
+Err:1 http://mirrors.ivolces.com/velinux orion InRelease
+  The following signatures were invalid: EXPKEYSIG C74AA1CB9C972D19 veLinux Archive Automatic Signing Key (1/orion) <velinux@openvenus.cn>
+Reading package lists... Done
+W: GPG error: http://mirrors.ivolces.com/velinux orion InRelease: The following signatures were invalid: EXPKEYSIG C74AA1CB9C972D19 veLinux Archive Automatic Signing Key (1/orion) <velinux@openvenus.cn>
+E: The repository 'http://mirrors.ivolces.com/velinux orion InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+2026-08-27 20:47:08 - Error: Failed to run 'apt update' (Exit Code: 0)
+root@iv-yej331reo0qbxysdn2zs:~# sudo apt-get install -y nodejs
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+nodejs is already the newest version (10.24.0~dfsg-1~deb10u4).
+0 upgraded, 0 newly installed, 0 to remove and 80 not upgraded.
+root@iv-yej331reo0qbxysdn2zs:~# node -v
+v18.20.4
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 2. 安装 pnpm
+root@iv-yej331reo0qbxysdn2zs:~# sudo npm install -g pnpm
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'pnpm@11.24.0',
+npm warn EBADENGINE   required: { node: '>=22.13' },
+npm warn EBADENGINE   current: { node: 'v18.20.4', npm: '10.7.0' }
+npm warn EBADENGINE }
+
+changed 1 package in 2s
+
+1 package is looking for funding
+  run `npm fund` for details
+root@iv-yej331reo0qbxysdn2zs:~# pnpm -v
+-bash: pnpm: command not found
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 3. 安装 pm2
+root@iv-yej331reo0qbxysdn2zs:~# sudo npm install -g pm2
+
+added 77 packages in 21s
+
+8 packages are looking for funding
+  run `npm fund` for details
+root@iv-yej331reo0qbxysdn2zs:~# pm2 -v
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 4. 检查代码是否已克隆
+root@iv-yej331reo0qbxysdn2zs:~# ls -la /home/tunshu-ai-customer-service
+ls: cannot access '/home/tunshu-ai-customer-service': No such file or directory
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 5. 如果代码目录不存在，克隆代码
+root@iv-yej331reo0qbxysdn2zs:~# cd /home
+root@iv-yej331reo0qbxysdn2zs:/home# sudo git clone https://github.com/chrisyue123/tunshu-ai-customer-service.git
+Cloning into 'tunshu-ai-customer-service'...
+fatal: unable to access 'https://github.com/chrisyue123/tunshu-ai-customer-service.git/': gnutls_handshake() failed: The TLS connection was non-properly terminated.
+root@iv-yej331reo0qbxysdn2zs:/home# cd tunshu-ai-customer-service
+-bash: cd: tunshu-ai-customer-service: No such file or directory
+root@iv-yej331reo0qbxysdn2zs:/home# sudo chown -R $USER:$USER .
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 6. 安装依赖
+root@iv-yej331reo0qbxysdn2zs:/home# pnpm install
+-bash: pnpm: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 7. 创建环境变量文件
+root@iv-yej331reo0qbxysdn2zs:/home# cat > .env.local << 'EOF'
+> WECOM_CORP_ID=ww2de6cb90788bb133
+> WECOM_AGENT_ID=1000007
+> WECOM_SECRET=HNLSpW89NyL9mu16m-EQHd2-B0_VgW_ibSrD1lNXfHY
+> WECOM_KF_ACCOUNT_ID=kfc4a507c5306096627
+> WECOM_TOKEN=
+> WECOM_ENCODING_AES_KEY=
+> NEXT_PUBLIC_APP_URL=https://tunshu-ministorage.cn
+> EOF
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 8. 构建
+root@iv-yej331reo0qbxysdn2zs:/home# pnpm build
+-bash: pnpm: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 9. 启动服务
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 start npm --name "tunshu-ai" -- start
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 save
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 startup
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 10. 检查服务状态
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 status
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 logs tunshu-ai --lines 20
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 11. 检查 3000 端口
+root@iv-yej331reo0qbxysdn2zs:/home# sudo ss -tlnp | grep :3000
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 1. 安装 nvm
+root@iv-yej331reo0qbxysdn2zs:/home# curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 16555  100 16555    0     0   8890      0  0:00:01  0:00:01 --:--:--  8886
+=> Downloading nvm from git to '/root/.nvm'
+=> Cloning into '/root/.nvm'...
+remote: Enumerating objects: 469, done.
+remote: Counting objects: 100% (469/469), done.
+remote: Compressing objects: 100% (391/391), done.
+remote: Total 469 (delta 68), reused 233 (delta 51), pack-reused 0 (from 0)
+Receiving objects: 100% (469/469), 481.14 KiB | 30.00 KiB/s, done.
+Resolving deltas: 100% (68/68), done.
+* (HEAD detached at FETCH_HEAD)
+  master
+=> Compressing and cleaning up git repository
+
+=> Appending nvm source string to /root/.bashrc
+=> Appending bash_completion source string to /root/.bashrc
+=> You currently have modules installed globally with `npm`. These will no
+=> longer be linked to the active version of Node when you install a new node
+=> with `nvm`; and they may (depending on how you construct your `$PATH`)
+=> override the binaries of modules installed with `nvm`:
+
+/usr/local/node-v18.20.4-linux-x64/lib
+├── corepack@0.28.0
+├── pm2@7.0.4
+└── pnpm@11.24.0
+=> If you wish to uninstall them at a later point (or re-install them under your
+=> `nvm` Nodes), you can remove them from the system Node as follows:
+
+     $ nvm use system
+     $ npm uninstall -g a_module
+
+=> Close and reopen your terminal to start using nvm or run the following to use it now:
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 2. 重新加载 bash 配置
+root@iv-yej331reo0qbxysdn2zs:/home# source ~/.bashrc
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 3. 安装 Node.js 24
+root@iv-yej331reo0qbxysdn2zs:/home# nvm install 24
+Downloading and installing node v24.20.0...
+Downloading https://nodejs.org/dist/v24.20.0/node-v24.20.0-linux-x64.tar.xz...
+#################################################################################################################################################################################### 100.0%
+Computing checksum with sha256sum
+Checksums matched!
+Now using node v24.20.0 (npm v11.19.0)
+Creating default alias: default -> 24 (-> v24.20.0)
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 4. 使用 Node.js 24
+root@iv-yej331reo0qbxysdn2zs:/home# nvm use 24
+Now using node v24.20.0 (npm v11.19.0)
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 5. 验证版本
+root@iv-yej331reo0qbxysdn2zs:/home# node -v
+v24.20.0
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 1. 安装 pnpm
+root@iv-yej331reo0qbxysdn2zs:/home# npm install -g pnpm
+⠹
+
+added 1 package in 2s
+
+1 package is looking for funding
+  run `npm fund` for details
+root@iv-yej331reo0qbxysdn2zs:/home# pnpm -v
+11.24.0
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 2. 安装 pm2
+root@iv-yej331reo0qbxysdn2zs:/home# npm install -g pm2
+
+added 77 packages in 21s
+
+8 packages are looking for funding
+  run `npm fund` for details
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 -v
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Spawning PM2 daemon with pm2_home=/root/.pm2
+[PM2] PM2 Successfully daemonized
+7.0.4
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 3. 克隆代码
+root@iv-yej331reo0qbxysdn2zs:/home# cd /home
+root@iv-yej331reo0qbxysdn2zs:/home# sudo git clone https://github.com/chrisyue123/tunshu-ai-customer-service.git
+Cloning into 'tunshu-ai-customer-service'...
+@github.com': u-ai --lines 20ai" -- startorage.cn1lNXfHY/cd tunshu-ai-customer-service
