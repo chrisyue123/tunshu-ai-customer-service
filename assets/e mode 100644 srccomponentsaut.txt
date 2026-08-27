@@ -1,0 +1,164 @@
+e mode 100644 src/components/auth-guard.tsx
+ create mode 100644 src/components/client-layout.tsx
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# 
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# # 重新构建
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# pnpm build
+
+> projects@0.1.0 build /home/tunshu-ai-customer-service
+> bash ./scripts/build.sh
+
+Installing dependencies...
+
+Done in 8.3s
+Building the Next.js project...
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+  Using external babel configuration from /home/tunshu-ai-customer-service/.babelrc
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command was killed with SIGKILL (Forced termination): next build
+ ELIFECYCLE  Command failed with exit code 1.
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# 
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# # 重启服务
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# pm2 restart tunshu-ai
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [tunshu-ai](ids: [ 0 ])
+[PM2] [tunshu-ai](0) ✓
+┌────┬──────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name         │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tunshu-ai    │ default     │ 0.40.0  │ fork    │ 2306753  │ 0s     │ 2    │ online    │ 0%       │ 23.5mb   │ root     │ disabled │
+└────┴──────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+host metrics | cpu: 91.8% | ram usage: 59.5% | disk: ⇓ 100.748mb/s ⇑ 0.009mb/s
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# 
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# # 检查状态
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# pm2 status
+┌────┬──────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name         │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tunshu-ai    │ default     │ 0.40.0  │ fork    │ 2306753  │ 0s     │ 2    │ online    │ 0%       │ 65.8mb   │ root     │ disabled │
+└────┴──────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+host metrics | cpu: 91.8% | ram usage: 59.5% | disk: ⇓ 100.748mb/s ⇑ 0.009mb/s
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# # 1. 检查 pm2 服务状态
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# pm2 status
+┌────┬──────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name         │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tunshu-ai    │ default     │ 0.40.0  │ fork    │ 2306753  │ 14m    │ 2    │ online    │ 0%       │ 75.0mb   │ root     │ disabled │
+└────┴──────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+host metrics | cpu: 0.8% | ram usage: 59.2% | eth0: ⇓ 0mb/s ⇑ 0.001mb/s | disk: ⇓ 0mb/s ⇑ 0.093mb/s
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# 
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# # 2. 检查 5000 端口
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# sudo ss -tlnp | grep :5000
+LISTEN    0         511                      *:5000                   *:*        users:(("MainThread",pid=2306795,fd=29))                                       
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# 
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# # 3. 检查 80 端口
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# sudo ss -tlnp | grep :80
+LISTEN    0         511                0.0.0.0:80               0.0.0.0:*        users:(("nginx",pid=2305413,fd=6),("nginx",pid=2305412,fd=6),("nginx",pid=2305411,fd=6))
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# 
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# # 4. 查看 pm2 日志（最近50行）
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# pm2 logs tunshu-ai --lines 50
+[TAILING] Tailing last 50 lines for [tunshu-ai] process (change the value with --lines option)
+/root/.pm2/logs/tunshu-ai-error.log last 50 lines:
+0|tunshu-a |   79 |   }
+0|tunshu-a |   80 |   if (!anonKey) {
+0|tunshu-a |   81 |     throw new Error('COZE_SUPABASE_ANON_KEY is not set');
+0|tunshu-a | ⨯ Error: COZE_SUPABASE_URL is not set
+0|tunshu-a |     at getSupabaseCredentials (file:/home/tunshu-ai-customer-service/src/storage/database/supabase-client.ts:78:11)
+0|tunshu-a |     at getSupabaseClient (file:/home/tunshu-ai-customer-service/src/storage/database/supabase-client.ts:93:28)
+0|tunshu-a |     at GET (file:/home/tunshu-ai-customer-service/src/app/api/stats/route.ts:5:36)
+0|tunshu-a |   76 |
+0|tunshu-a |   77 |   if (!url) {
+0|tunshu-a | > 78 |     throw new Error('COZE_SUPABASE_URL is not set');
+0|tunshu-a |      |           ^
+0|tunshu-a |   79 |   }
+0|tunshu-a |   80 |   if (!anonKey) {
+0|tunshu-a |   81 |     throw new Error('COZE_SUPABASE_ANON_KEY is not set');
+0|tunshu-a | ⨯ Error: COZE_SUPABASE_URL is not set
+0|tunshu-a |     at getSupabaseCredentials (file:/home/tunshu-ai-customer-service/src/storage/database/supabase-client.ts:78:11)
+0|tunshu-a |     at getSupabaseClient (file:/home/tunshu-ai-customer-service/src/storage/database/supabase-client.ts:93:28)
+0|tunshu-a |     at GET (file:/home/tunshu-ai-customer-service/src/app/api/stats/route.ts:5:36)
+0|tunshu-a |   76 |
+0|tunshu-a |   77 |   if (!url) {
+0|tunshu-a | > 78 |     throw new Error('COZE_SUPABASE_URL is not set');
+0|tunshu-a |      |           ^
+0|tunshu-a |   79 |   }
+0|tunshu-a |   80 |   if (!anonKey) {
+0|tunshu-a |   81 |     throw new Error('COZE_SUPABASE_ANON_KEY is not set');
+0|tunshu-a | ⨯ Error: COZE_SUPABASE_URL is not set
+0|tunshu-a |     at getSupabaseCredentials (file:/home/tunshu-ai-customer-service/src/storage/database/supabase-client.ts:78:11)
+0|tunshu-a |     at getSupabaseClient (file:/home/tunshu-ai-customer-service/src/storage/database/supabase-client.ts:93:28)
+0|tunshu-a |     at GET (file:/home/tunshu-ai-customer-service/src/app/api/stats/route.ts:5:36)
+0|tunshu-a |   76 |
+0|tunshu-a |   77 |   if (!url) {
+0|tunshu-a | > 78 |     throw new Error('COZE_SUPABASE_URL is not set');
+0|tunshu-a |      |           ^
+0|tunshu-a |   79 |   }
+0|tunshu-a |   80 |   if (!anonKey) {
+0|tunshu-a |   81 |     throw new Error('COZE_SUPABASE_ANON_KEY is not set');
+0|tunshu-a | ⨯ Error: COZE_SUPABASE_URL is not set
+0|tunshu-a |     at getSupabaseCredentials (file:/home/tunshu-ai-customer-service/src/storage/database/supabase-client.ts:78:11)
+0|tunshu-a |     at getSupabaseClient (file:/home/tunshu-ai-customer-service/src/storage/database/supabase-client.ts:93:28)
+0|tunshu-a |     at GET (file:/home/tunshu-ai-customer-service/src/app/api/stats/route.ts:5:36)
+0|tunshu-a |   76 |
+0|tunshu-a |   77 |   if (!url) {
+0|tunshu-a | > 78 |     throw new Error('COZE_SUPABASE_URL is not set');
+0|tunshu-a |      |           ^
+0|tunshu-a |   79 |   }
+0|tunshu-a |   80 |   if (!anonKey) {
+0|tunshu-a |   81 |     throw new Error('COZE_SUPABASE_ANON_KEY is not set');
+0|tunshu-a | ./scripts/start.sh: line 10: 2304589 Killed                  PORT=${DEPLOY_RUN_PORT} node dist/server.js
+0|tunshu-a | (node:2306795) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+0|tunshu-a | (Use `node --trace-deprecation ...` to show where the warning was created)
+
+/root/.pm2/logs/tunshu-ai-out.log last 50 lines:
+0|tunshu-a |  GET / 200 in 45ms (compile: 2ms, render: 43ms)
+0|tunshu-a |  GET /api/stats 500 in 9ms (compile: 2ms, render: 7ms)
+0|tunshu-a |  GET /.git/HEAD 404 in 834ms (compile: 745ms, render: 88ms)
+0|tunshu-a |  GET /.git/config 404 in 55ms (compile: 3ms, render: 52ms)
+0|tunshu-a |  GET / 200 in 85ms (compile: 22ms, render: 63ms)
+0|tunshu-a |  GET /api/stats 500 in 28ms (compile: 3ms, render: 25ms)
+0|tunshu-a |  GET / 200 in 45ms (compile: 2ms, render: 43ms)
+0|tunshu-a |  GET /api/stats 500 in 19ms (compile: 4ms, render: 15ms)
+0|tunshu-a |  GET / 200 in 48ms (compile: 2ms, render: 46ms)
+0|tunshu-a |  GET /api/stats 500 in 14ms (compile: 4ms, render: 10ms)
+0|tunshu-a |  GET / 200 in 46ms (compile: 3ms, render: 44ms)
+0|tunshu-a |  GET /api/stats 500 in 9ms (compile: 2ms, render: 7ms)
+0|tunshu-a |  GET / 200 in 117ms (compile: 2ms, render: 115ms)
+0|tunshu-a |  GET / 200 in 45ms (compile: 2ms, render: 43ms)
+0|tunshu-a |  GET / 200 in 47ms (compile: 3ms, render: 44ms)
+0|tunshu-a |  GET /api/stats 500 in 14ms (compile: 3ms, render: 11ms)
+0|tunshu-a |  GET /api/stats 500 in 9ms (compile: 1851µs, render: 7ms)
+0|tunshu-a |  GET / 200 in 45ms (compile: 2ms, render: 43ms)
+0|tunshu-a |  GET /api/stats 500 in 10ms (compile: 2ms, render: 8ms)
+0|tunshu-a |  GET / 200 in 48ms (compile: 3ms, render: 45ms)
+0|tunshu-a |  GET /api/stats 500 in 10ms (compile: 2ms, render: 8ms)
+0|tunshu-a |  GET / 200 in 49ms (compile: 3ms, render: 47ms)
+0|tunshu-a |  GET /api/stats 500 in 12ms (compile: 2ms, render: 10ms)
+0|tunshu-a |  GET / 200 in 43ms (compile: 2ms, render: 41ms)
+0|tunshu-a |  GET /api/stats 500 in 13ms (compile: 1905µs, render: 11ms)
+0|tunshu-a |  GET / 200 in 86ms (compile: 2ms, render: 84ms)
+0|tunshu-a |  GET /api/stats 500 in 11ms (compile: 2ms, render: 9ms)
+0|tunshu-a |  GET / 200 in 43ms (compile: 2ms, render: 41ms)
+0|tunshu-a |  GET /api/stats 500 in 10ms (compile: 1920µs, render: 8ms)
+0|tunshu-a |  GET / 200 in 44ms (compile: 1917µs, render: 42ms)
+0|tunshu-a |  GET /SDK/webLanguage 404 in 71ms (compile: 7ms, render: 64ms)
+0|tunshu-a |  GET / 200 in 52ms (compile: 3ms, render: 49ms)
+0|tunshu-a |  GET /api/stats 500 in 14ms (compile: 3ms, render: 10ms)
+0|tunshu-a | ✓ Compiled in 717ms
+0|tunshu-a | 
+0|tunshu-a | > projects@0.1.0 start
+0|tunshu-a | > bash ./scripts/start.sh
+0|tunshu-a | 
+0|tunshu-a | Starting HTTP service on port 5000 for deploy...
+0|tunshu-a | Starting HTTP service on port 5000 for deploy...
+0|tunshu-a | > Server listening at http://localhost:5000 as development
+0|tunshu-a | 
+0|tunshu-a | > projects@0.1.0 start
+0|tunshu-a | > bash ./scripts/start.sh
+0|tunshu-a | 
+0|tunshu-a | Starting HTTP service on port 5000 for deploy...
+0|tunshu-a | Starting HTTP service on port 5000 for deploy...
+0|tunshu-a | > Server listening at http://localhost:5000 as development
+0|tunshu-a |   Using external babel configuration from /home/tunshu-ai-customer-service/.babelrc
+0|tunshu-a |  GET / 200 in 2.8s (compile: 2.6s, render: 204ms)
