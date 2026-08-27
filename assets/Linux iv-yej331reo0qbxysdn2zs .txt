@@ -1,0 +1,462 @@
+Linux iv-yej331reo0qbxysdn2zs 5.4.250-9-velinux1u2-amd64 #velinux1u2 SMP Debian 5.4.250-9-velinux1u2 Mon Apr 28 08:10:41  x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Thu Aug 27 00:31:24 2026 from 14.103.65.76
+root@iv-yej331reo0qbxysdn2zs:~# # 1. 检查 pm2 服务状态
+root@iv-yej331reo0qbxysdn2zs:~# pm2 status
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 2. 查看 pm2 日志
+root@iv-yej331reo0qbxysdn2zs:~# pm2 logs tunshu-ai --lines 50
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 3. 检查 Nginx 状态
+root@iv-yej331reo0qbxysdn2zs:~# sudo systemctl status nginx
+● nginx.service - A high performance web server and a reverse proxy server
+   Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+   Active: active (running) since Wed 2026-08-26 21:55:56 CST; 22h ago
+     Docs: man:nginx(8)
+  Process: 2266940 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+  Process: 2266941 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+ Main PID: 2266942 (nginx)
+    Tasks: 3 (limit: 2184)
+   Memory: 3.4M
+   CGroup: /system.slice/nginx.service
+           ├─2266942 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+           ├─2266943 nginx: worker process
+           └─2266944 nginx: worker process
+
+Warning: Journal has been rotated since unit was started. Log output is incomplete or unavailable.
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 4. 检查 3000 端口是否在监听
+root@iv-yej331reo0qbxysdn2zs:~# sudo ss -tlnp | grep :3000
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 5. 检查 80 端口是否在监听
+root@iv-yej331reo0qbxysdn2zs:~# sudo ss -tlnp | grep :80
+LISTEN    0         511                0.0.0.0:80               0.0.0.0:*        users:(("nginx",pid=2266944,fd=6),("nginx",pid=2266943,fd=6),("nginx",pid=2266942,fd=6))
+root@iv-yej331reo0qbxysdn2zs:~# # 1. 安装 Node.js 24（如果还没有）
+root@iv-yej331reo0qbxysdn2zs:~# curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+
+2026-08-27 20:47:07 - Installing pre-requisites
+Get:1 http://mirrors.ivolces.com/velinux orion InRelease [19.4 kB]
+Hit:2 http://mirrors.ivolces.com/debian buster InRelease
+Hit:3 http://mirrors.ivolces.com/debian buster-backports InRelease
+Hit:4 http://mirrors.ivolces.com/debian-security buster/updates InRelease
+Err:1 http://mirrors.ivolces.com/velinux orion InRelease
+  The following signatures were invalid: EXPKEYSIG C74AA1CB9C972D19 veLinux Archive Automatic Signing Key (1/orion) <velinux@openvenus.cn>
+Reading package lists... Done
+W: GPG error: http://mirrors.ivolces.com/velinux orion InRelease: The following signatures were invalid: EXPKEYSIG C74AA1CB9C972D19 veLinux Archive Automatic Signing Key (1/orion) <velinux@openvenus.cn>
+E: The repository 'http://mirrors.ivolces.com/velinux orion InRelease' is not signed.
+N: Updating from such a repository can't be done securely, and is therefore disabled by default.
+N: See apt-secure(8) manpage for repository creation and user configuration details.
+2026-08-27 20:47:08 - Error: Failed to run 'apt update' (Exit Code: 0)
+root@iv-yej331reo0qbxysdn2zs:~# sudo apt-get install -y nodejs
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+nodejs is already the newest version (10.24.0~dfsg-1~deb10u4).
+0 upgraded, 0 newly installed, 0 to remove and 80 not upgraded.
+root@iv-yej331reo0qbxysdn2zs:~# node -v
+v18.20.4
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 2. 安装 pnpm
+root@iv-yej331reo0qbxysdn2zs:~# sudo npm install -g pnpm
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'pnpm@11.24.0',
+npm warn EBADENGINE   required: { node: '>=22.13' },
+npm warn EBADENGINE   current: { node: 'v18.20.4', npm: '10.7.0' }
+npm warn EBADENGINE }
+
+changed 1 package in 2s
+
+1 package is looking for funding
+  run `npm fund` for details
+root@iv-yej331reo0qbxysdn2zs:~# pnpm -v
+-bash: pnpm: command not found
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 3. 安装 pm2
+root@iv-yej331reo0qbxysdn2zs:~# sudo npm install -g pm2
+
+added 77 packages in 21s
+
+8 packages are looking for funding
+  run `npm fund` for details
+root@iv-yej331reo0qbxysdn2zs:~# pm2 -v
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 4. 检查代码是否已克隆
+root@iv-yej331reo0qbxysdn2zs:~# ls -la /home/tunshu-ai-customer-service
+ls: cannot access '/home/tunshu-ai-customer-service': No such file or directory
+root@iv-yej331reo0qbxysdn2zs:~# 
+root@iv-yej331reo0qbxysdn2zs:~# # 5. 如果代码目录不存在，克隆代码
+root@iv-yej331reo0qbxysdn2zs:~# cd /home
+root@iv-yej331reo0qbxysdn2zs:/home# sudo git clone https://github.com/chrisyue123/tunshu-ai-customer-service.git
+Cloning into 'tunshu-ai-customer-service'...
+fatal: unable to access 'https://github.com/chrisyue123/tunshu-ai-customer-service.git/': gnutls_handshake() failed: The TLS connection was non-properly terminated.
+root@iv-yej331reo0qbxysdn2zs:/home# cd tunshu-ai-customer-service
+-bash: cd: tunshu-ai-customer-service: No such file or directory
+root@iv-yej331reo0qbxysdn2zs:/home# sudo chown -R $USER:$USER .
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 6. 安装依赖
+root@iv-yej331reo0qbxysdn2zs:/home# pnpm install
+-bash: pnpm: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 7. 创建环境变量文件
+root@iv-yej331reo0qbxysdn2zs:/home# cat > .env.local << 'EOF'
+> WECOM_CORP_ID=ww2de6cb90788bb133
+> WECOM_AGENT_ID=1000007
+> WECOM_SECRET=HNLSpW89NyL9mu16m-EQHd2-B0_VgW_ibSrD1lNXfHY
+> WECOM_KF_ACCOUNT_ID=kfc4a507c5306096627
+> WECOM_TOKEN=
+> WECOM_ENCODING_AES_KEY=
+> NEXT_PUBLIC_APP_URL=https://tunshu-ministorage.cn
+> EOF
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 8. 构建
+root@iv-yej331reo0qbxysdn2zs:/home# pnpm build
+-bash: pnpm: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 9. 启动服务
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 start npm --name "tunshu-ai" -- start
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 save
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 startup
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 10. 检查服务状态
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 status
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 logs tunshu-ai --lines 20
+-bash: pm2: command not found
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 11. 检查 3000 端口
+root@iv-yej331reo0qbxysdn2zs:/home# sudo ss -tlnp | grep :3000
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 1. 安装 nvm
+root@iv-yej331reo0qbxysdn2zs:/home# curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 16555  100 16555    0     0   8890      0  0:00:01  0:00:01 --:--:--  8886
+=> Downloading nvm from git to '/root/.nvm'
+=> Cloning into '/root/.nvm'...
+remote: Enumerating objects: 469, done.
+remote: Counting objects: 100% (469/469), done.
+remote: Compressing objects: 100% (391/391), done.
+remote: Total 469 (delta 68), reused 233 (delta 51), pack-reused 0 (from 0)
+Receiving objects: 100% (469/469), 481.14 KiB | 30.00 KiB/s, done.
+Resolving deltas: 100% (68/68), done.
+* (HEAD detached at FETCH_HEAD)
+  master
+=> Compressing and cleaning up git repository
+
+=> Appending nvm source string to /root/.bashrc
+=> Appending bash_completion source string to /root/.bashrc
+=> You currently have modules installed globally with `npm`. These will no
+=> longer be linked to the active version of Node when you install a new node
+=> with `nvm`; and they may (depending on how you construct your `$PATH`)
+=> override the binaries of modules installed with `nvm`:
+
+/usr/local/node-v18.20.4-linux-x64/lib
+├── corepack@0.28.0
+├── pm2@7.0.4
+└── pnpm@11.24.0
+=> If you wish to uninstall them at a later point (or re-install them under your
+=> `nvm` Nodes), you can remove them from the system Node as follows:
+
+     $ nvm use system
+     $ npm uninstall -g a_module
+
+=> Close and reopen your terminal to start using nvm or run the following to use it now:
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 2. 重新加载 bash 配置
+root@iv-yej331reo0qbxysdn2zs:/home# source ~/.bashrc
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 3. 安装 Node.js 24
+root@iv-yej331reo0qbxysdn2zs:/home# nvm install 24
+Downloading and installing node v24.20.0...
+Downloading https://nodejs.org/dist/v24.20.0/node-v24.20.0-linux-x64.tar.xz...
+#################################################################################################################################################################################### 100.0%
+Computing checksum with sha256sum
+Checksums matched!
+Now using node v24.20.0 (npm v11.19.0)
+Creating default alias: default -> 24 (-> v24.20.0)
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 4. 使用 Node.js 24
+root@iv-yej331reo0qbxysdn2zs:/home# nvm use 24
+Now using node v24.20.0 (npm v11.19.0)
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 5. 验证版本
+root@iv-yej331reo0qbxysdn2zs:/home# node -v
+v24.20.0
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 1. 安装 pnpm
+root@iv-yej331reo0qbxysdn2zs:/home# npm install -g pnpm
+⠹
+
+added 1 package in 2s
+
+1 package is looking for funding
+  run `npm fund` for details
+root@iv-yej331reo0qbxysdn2zs:/home# pnpm -v
+11.24.0
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 2. 安装 pm2
+root@iv-yej331reo0qbxysdn2zs:/home# npm install -g pm2
+
+added 77 packages in 21s
+
+8 packages are looking for funding
+  run `npm fund` for details
+root@iv-yej331reo0qbxysdn2zs:/home# pm2 -v
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Spawning PM2 daemon with pm2_home=/root/.pm2
+[PM2] PM2 Successfully daemonized
+7.0.4
+root@iv-yej331reo0qbxysdn2zs:/home# 
+root@iv-yej331reo0qbxysdn2zs:/home# # 3. 克隆代码
+root@iv-yej331reo0qbxysdn2zs:/home# cd /home
+root@iv-yej331reo0qbxysdn2zs:/home# sudo git clone https://github.com/chrisyue123/tunshu-ai-customer-service.git
+Cloning into 'tunshu-ai-customer-service'...
+@github.com': u-ai --lines 20ai" -- startorage.cn1lNXfHY/cd tunshu-ai-customer-service
+remote: Invalid username or token. Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/chrisyue123/tunshu-ai-customer-service.git/'
+root@iv-yej331reo0qbxysdn2zs:/home# # 方案1：用 HTTP 克隆（推荐）
+root@iv-yej331reo0qbxysdn2zs:/home# cd /home
+root@iv-yej331reo0qbxysdn2zs:/home# sudo git clone http://github.com/chrisyue123/tunshu-ai-customer-service.git
+Cloning into 'tunshu-ai-customer-service'...
+Username for 'https://github.com': chrisyue123
+chrisyue123@github.com': b.com/chrisyue123/tunshu-ai-customer-service.git
+remote: Invalid username or token. Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/chrisyue123/tunshu-ai-customer-service.git/'
+root@iv-yej331reo0qbxysdn2zs:/home# cd /home
+root@iv-yej331reo0qbxysdn2zs:/home# sudo rm -rf tunshu-ai-customer-service
+root@iv-yej331reo0qbxysdn2zs:/home# sudo git clone https://github.com/chrisyue123/tunshu-ai-customer-service.git
+Cloning into 'tunshu-ai-customer-service'...
+
+warning: You appear to have cloned an empty repository.
+root@iv-yej331reo0qbxysdn2zs:/home# cd tunshu-ai-customer-service
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# sudo chown -R $USER:$USER .
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# 
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# cd /home
+root@iv-yej331reo0qbxysdn2zs:/home# sudo rm -rf tunshu-ai-customer-service
+root@iv-yej331reo0qbxysdn2zs:/home# sudo git clone https://github.com/chrisyue123/tunshu-ai-customer-service.git
+Cloning into 'tunshu-ai-customer-service'...
+
+remote: Enumerating objects: 277, done.
+remote: Counting objects: 100% (277/277), done.
+remote: Compressing objects: 100% (172/172), done.
+remote: Total 277 (delta 82), reused 277 (delta 82), pack-reused 0 (from 0)
+Receiving objects: 100% (277/277), 3.97 MiB | 30.00 KiB/s, done.
+Resolving deltas: 100% (82/82), done.
+root@iv-yej331reo0qbxysdn2zs:/home# cd tunshu-ai-customer-service
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# sudo chown -R $USER:$USER .
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# pnpm install
+Downloading @img/sharp-libvips-linux-x64@1.2.4: 7.53 MB/7.53 MB, done
+Downloading js-tiktoken@1.0.21: 10.24 MB/10.24 MB, done
+Downloading @next/swc-linux-x64-gnu@16.1.1: 40.50 MB/40.50 MB, done
+Downloading next@16.1.1: 30.65 MB/30.65 MB, done
+node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild: Running postinstall script, done in 88ms
+node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/unrs-resolver: Running postinstall script, done in 200ms
+node_modules/.pnpm/esbuild@0.25.12/node_modules/esbuild: Running postinstall script, done in 252ms
+node_modules/.pnpm/esbuild@0.18.20/node_modules/esbuild: Running postinstall script, done in 237ms
+node_modules/.pnpm/msw@2.12.7_@types+node@20.19.30_typescript@5.9.3/node_modules/msw: Running postinstall script, done in 133ms
+node_modules/.pnpm/sharp@0.34.5/node_modules/sharp: Running install script, done in 115ms
+
+dependencies:
++ @aws-sdk/client-s3 3.975.0
++ @aws-sdk/lib-storage 3.975.0
++ @hookform/resolvers 5.2.2
++ @radix-ui/react-accordion 1.2.12
++ @radix-ui/react-alert-dialog 1.1.15
++ @radix-ui/react-aspect-ratio 1.1.8
++ @radix-ui/react-avatar 1.1.11
++ @radix-ui/react-checkbox 1.3.3
++ @radix-ui/react-collapsible 1.1.12
++ @radix-ui/react-context-menu 2.2.16
++ @radix-ui/react-dialog 1.1.15
++ @radix-ui/react-dropdown-menu 2.1.16
++ @radix-ui/react-hover-card 1.1.15
++ @radix-ui/react-label 2.1.8
++ @radix-ui/react-menubar 1.1.16
++ @radix-ui/react-navigation-menu 1.2.14
++ @radix-ui/react-popover 1.1.15
++ @radix-ui/react-progress 1.1.8
++ @radix-ui/react-radio-group 1.3.8
++ @radix-ui/react-scroll-area 1.2.10
++ @radix-ui/react-select 2.2.6
++ @radix-ui/react-separator 1.1.8
++ @radix-ui/react-slider 1.3.6
++ @radix-ui/react-slot 1.2.4
++ @radix-ui/react-switch 1.2.6
++ @radix-ui/react-tabs 1.1.13
++ @radix-ui/react-toggle 1.1.10
++ @radix-ui/react-toggle-group 1.1.11
++ @radix-ui/react-tooltip 1.2.8
++ @supabase/supabase-js 2.95.3
++ class-variance-authority 0.7.1
++ clsx 2.1.1
++ cmdk 1.1.1
++ coze-coding-dev-sdk 0.7.24
++ date-fns 4.1.0
++ dotenv 17.2.3
++ drizzle-kit 0.31.8
++ drizzle-orm 0.45.1
++ drizzle-zod 0.8.3
++ embla-carousel-react 8.6.0
++ input-otp 1.4.2
++ lucide-react 0.468.0
++ next 16.1.1
++ next-themes 0.4.6
++ pg 8.17.2
++ react 19.2.3
++ react-day-picker 9.13.0
++ react-dom 19.2.3
++ react-hook-form 7.71.1
++ react-resizable-panels 4.5.2
++ recharts 2.15.4
++ sonner 2.0.7
++ tailwind-merge 2.6.0
++ tw-animate-css 1.4.0
++ vaul 1.1.2
++ zod 4.3.6
+
+devDependencies:
++ @react-dev-inspector/babel-plugin 2.0.1
++ @react-dev-inspector/middleware 2.0.1
++ @tailwindcss/postcss 4.1.18
++ @types/node 20.19.30
++ @types/pg 8.16.0
++ @types/react 19.2.10
++ @types/react-dom 19.2.3
++ eslint 9.39.2
++ eslint-config-next 16.1.1
++ only-allow 1.2.2
++ react-dev-inspector 2.0.1
++ shadcn 3.7.0
++ stylelint 16.26.1
++ stylelint-config-standard 38.0.0
++ tailwindcss 4.1.18
++ tsup 8.5.1
++ tsx 4.21.0
++ typescript 5.9.3
+
+Done in 2m 26.6s
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# cat > .env.local << 'EOF'
+> WECOM_CORP_ID=ww2de6cb90788bb133
+> WECOM_AGENT_ID=1000007
+> WECOM_SECRET=HNLSpW89NyL9mu16m-EQHd2-B0_VgW_ibSrD1lNXfHY
+> WECOM_KF_ACCOUNT_ID=kfc4a507c5306096627
+> WECOM_TOKEN=
+> WECOM_ENCODING_AES_KEY=
+> NEXT_PUBLIC_APP_URL=https://tunshu-ministorage.cn
+> EOF
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# pnpm build
+
+> projects@0.1.0 build /home/tunshu-ai-customer-service
+> bash ./scripts/build.sh
+
+Installing dependencies...
+
+Done in 2.1s
+Building the Next.js project...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+▲ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+  Using external babel configuration from /home/tunshu-ai-customer-service/.babelrc
+✓ Compiled successfully in 16.8s
+✓ Finished TypeScript in 11.6s    
+✓ Collecting page data using 1 worker in 1515.2ms    
+✓ Generating static pages using 1 worker (24/24) in 359.9ms
+✓ Finalizing page optimization in 5.1ms    
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /agent
+├ ƒ /api/agent
+├ ƒ /api/chat-test
+├ ƒ /api/conversations
+├ ƒ /api/conversations/history
+├ ƒ /api/knowledge
+├ ƒ /api/messages
+├ ƒ /api/notification-targets
+├ ƒ /api/stats
+├ ƒ /api/transfer-rules
+├ ƒ /api/wecom
+├ ƒ /api/wecom/status
+├ ƒ /api/wecom/test
+├ ○ /chat-test
+├ ○ /history
+├ ○ /knowledge
+├ ○ /monitor
+├ ○ /robots.txt
+├ ○ /transfer
+└ ○ /wecom
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Bundling server with tsup...
+CLI Building entry: src/server.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: node20
+CJS Build start
+CJS dist/server.js 2.14 KB
+CJS ⚡️ Build success in 69ms
+Build completed successfully!
+root@iv-yej331reo0qbxysdn2zs:/home/tunshu-ai-customer-service# 
