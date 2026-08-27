@@ -15,6 +15,7 @@ import {
   Plug,
   Users,
   LogOut,
+  QrCode,
 } from 'lucide-react';
 
 const navigation = [
@@ -25,6 +26,7 @@ const navigation = [
   { name: '对话监控', href: '/monitor', icon: Monitor },
   { name: '转人工设置', href: '/transfer', icon: ArrowRightLeft },
   { name: '历史记录', href: '/history', icon: History },
+  { name: '微信客服二维码', href: '/kf-qr', icon: QrCode },
   { name: '员工管理', href: '/employees', icon: Users },
   { name: '企业微信对接', href: '/wecom', icon: Plug },
 ];
