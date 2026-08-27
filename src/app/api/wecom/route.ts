@@ -8,6 +8,7 @@ import {
   resolveKfId,
   syncKfMessages,
 } from '@/lib/wecom';
+import { createWeComCrypto } from '@/lib/wecom-crypto';
 
 /**
  * 企业微信回调接口
@@ -22,15 +23,52 @@ let syncCursor = '';
 // GET: 验证回调 URL
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+  const msgSignature = searchParams.get('msg_signature');
+  const timestamp = searchParams.get('timestamp');
+  const nonce = searchParams.get('nonce');
   const echostr = searchParams.get('echostr');
 
-  // 简化验证：实际部署时需要用 Token + EncodingAESKey 解密
-  // 参考: https://developer.work.weixin.qq.com/document/path/90968
-  if (echostr) {
-    return new NextResponse(echostr);
+  console.log('[WeCom Callback] GET request received', {
+    msgSignature,
+    timestamp,
+    nonce,
+    echostr: echostr?.substring(0, 20) + '...',
+  });
+
+  // 检查必要参数
+  if (!msgSignature || !timestamp || !nonce || !echostr) {
+    console.error('[WeCom Callback] Missing required parameters');
+    return new NextResponse('Missing parameters', { status: 400 });
   }
 
-  return new NextResponse('ok');
+  // 创建加解密实例
+  const weComCrypto = createWeComCrypto();
+  if (!weComCrypto) {
+    console.error('[WeCom Callback] Failed to create WeComCrypto instance');
+    return new NextResponse('Server configuration error', { status: 500 });
+  }
+
+  try {
+    // 验证签名并解密 echostr
+    const decryptedEchostr = weComCrypto.verifyAndDecrypt(
+      msgSignature,
+      timestamp,
+      nonce,
+      echostr
+    );
+
+    console.log('[WeCom Callback] Decrypted echostr:', decryptedEchostr);
+
+    // 返回解密后的明文（纯文本，不带引号）
+    return new NextResponse(decryptedEchostr, {
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    });
+  } catch (error) {
+    console.error('[WeCom Callback] Verification failed:', error);
+    return new NextResponse('Verification failed', { status: 403 });
+  }
 }
 
 // POST: 接收消息事件
